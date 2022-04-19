@@ -1,14 +1,34 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
-#define NULL ((void *)0)
+#ifndef _MAIN_
+#define _MAIN_
 
-int _putchar(char c);
-int _print_str(char *string);
-int _print_int(long int var);
+#include <unistd.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <limits.h>
+
+/**
+* struct op - flag / function object
+* @c: flag
+* @f: function
+*/
+
+typedef struct op
+{
+	char *c;
+	int (*f)(va_list);
+} op_t;
+
 int _printf(const char *format, ...);
-int to_Binary(unsigned int n);
-int to_Octal(unsigned int n);
-int _power_recursion(int x, int y);
-int to_Hexa(unsigned int num);
+int _putchar(char c);
+int print_c(va_list ar_list);
+int (*get_func(char s))(va_list ar_list);
+int print_s(va_list ar_list);
+int print_d(va_list ar_list);
+int print_i(va_list ar_numlist);
+int print_b(va_list binary_list);
+int print_u(va_list ar_list);
+int print_o(va_list ar_list);
+int print_x(va_list ar_list);
+int print_X(va_list ar_list);
 
 #endif

@@ -1,80 +1,47 @@
-#include <stdarg.h>
 #include "main.h"
-#include <stdio.h>
-
 /**
-  * _printf - produces output according to a format.
-  * @format: a character string.
-  * Return: number of characters printed(
-  * excluding the null terminator)
-  */
-
+* _printf - main function to print in console
+* @format: array to print and check type
+* Return: count of character printed
+**/
 int _printf(const char *format, ...)
 {
-	int count;
-	int total = 0;
-	va_list args;
-	int flag = 0;
+	int count = -1;
 
-	if (format == NULL)
-		return (0);
-
-	va_start(args, format);
-	for (count = 0; *(format + count) != '\0'; count++)
+	if (format != NULL)
 	{
-		if (format[count] == '%')
+		int i;
+		va_list ar_list;
+		int (*o)(va_list);
+
+		va_start(ar_list, format);
+
+		if (format[0] == '%' && format[1] == '\0')
+			return (-1);
+
+		count = 0;
+
+		for (i = 0; format[i] != '\0'; i++)
 		{
-			flag = 1;
-		}
-		else if (flag == 1)
-		{
-			flag = 0;
-			switch (format[count])
+			if (format[i] == '%')
 			{
-				case 'c':
-					_putchar(va_arg(args, int));
-					total += 1;
-					break;
-				case 's':
-					total += _print_str(va_arg(args, char *));
-					break;
-				case '%':
-					_putchar('%');
-					total += 1;
-					break;
-				case 'd':
-					total += _print_int((long)(va_arg(args, int)));
-					break;
-				case 'i':
-					total += _print_int((long)(va_arg(args, int)));
-					break;
-				case 'b':
-					total += to_Binary(va_arg(args, int));
-					break;
-				case 'u':
-					total += _print_int(va_arg(args, unsigned int));
-					break;
-				case 'o':
-					total += to_Octal(va_arg(args, int));
-					break;
-				case 'x':
-					total += to_Hexa(va_arg(args, int));
-					break;
-				case 'X':
-					total += to_Hexa(va_arg(args, int));
-					break;
-				default:
-					_putchar('%');
-					_putchar(format[count]);
-					total += 2;
+				if (format[i + 1] == '%')
+				{
+					count += _putchar(format[i]);
+					i++;
+				}
+				else if (format[i + 1] != '\0')
+				{
+					o = get_func(format[i + 1]);
+					count += (o ? o(ar_list) : _putchar(format[i]) + _putchar(format[i + 1]));
+					i++;
+				}
 			}
+			else
+				count += _putchar(format[i]);
 		}
-		else
-		{
-			_putchar(format[count]);
-			total += 1;
-		}
+		va_end(ar_list);
 	}
-	va_end(args);
-	return (total);
+
+	return (count);
 }
